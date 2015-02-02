@@ -13,7 +13,8 @@ endfunction
 
 function! ChuckStartServer()
     "silent !sudo chuck --loop
-    call system("sudo chuck --loop")
+    call system("cygstart --show --action=runas chuck --loop")
+    " for windows, you need to run chuck as admin to prevent crash
 endfunction
 
 function! ChuckAdd()
