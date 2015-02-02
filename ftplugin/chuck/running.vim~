@@ -44,3 +44,5 @@ nnoremap <buffer> <localleader>+ :call ChuckAdd()<cr>
 nnoremap <buffer> <localleader>- :call ChuckRemove()<cr>
 nnoremap <buffer> <localleader>= :call ChuckReplace()<cr>
 nnoremap <buffer> <localleader>k :call ChuckKill()<cr>
+
+
