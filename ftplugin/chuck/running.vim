@@ -26,7 +26,8 @@ function! ChuckStartServer()
         call inputsave()
         let un = input("Windows Username:")
         call inputrestore()
-        silent call system("start cmd /k runas /user:".un."\\administrator \"chuck --loop\"")
+        let cmd = escape("runas /user:".un."\\administrator \"chuck --loop\"", '\')
+        silent call system("start cmd /k runas /user:".cmd)
     endif
 
 endfunction
