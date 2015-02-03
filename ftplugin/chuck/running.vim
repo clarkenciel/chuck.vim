@@ -19,15 +19,18 @@ function! ChuckStartServer()
         call inputrestore()
         let cmd = escape("runas /user:".un."\\administrator \"chuck --loop\"", '\')
         silent call system("cmd /c start cmd /c ".cmd)
-    endif
-
-    if has("win32") || has("win64") || has("win16")
+    elseif has("win32") || has("win64") || has("win16")
         " for regular windows
         call inputsave()
         let un = input("Windows Username:")
         call inputrestore()
-        let cmd = escape("runas /user:".un."\\administrator \"chuck --loop\"", '\')
+        let cmd = escape(un."\\administrator \"chuck --loop\"", '\')
         silent call system("start cmd /k runas /user:".cmd)
+    elseif has("unix") && system("uname") == "Darwin"
+        " (hopefully) tell mac to open new terminal and run chucK vm
+        silent call system("osascript -e \'tell app \"Terminal\" do script \"chuck --loop\" end tell\'")
+    else " assume Linux - hopefully this works!
+        silent call system(&term . "chuck --loop")
     endif
 
 endfunction
