@@ -12,9 +12,23 @@ function! ChuckRunBuffer()
 endfunction
 
 function! ChuckStartServer()
-    "silent !sudo chuck --loop
-    call system("cygstart --show --action=runas chuck --loop")
-    " for windows, you need to run chuck as admin to prevent crash
+    if has("win32unix") && &shell == '/bin/bash'
+        " for that massive crowd of cygwin users ;)
+        call inputsave()
+        let un = input("Windows Username:")
+        call inputrestore()
+        let cmd = escape("runas /user:".un."\\administrator \"chuck --loop\"", '\')
+        silent call system("cmd /c start cmd /c ".cmd)
+    endif
+
+    if has("win32") || has("win64") || has("win16")
+        " for regular windows
+        call inputsave()
+        let un = input("Windows Username:")
+        call inputrestore()
+        silent call system("start cmd /k runas /user:".un."\\administrator \"chuck --loop\"")
+    endif
+
 endfunction
 
 function! ChuckAdd()
