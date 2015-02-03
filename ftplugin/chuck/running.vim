@@ -32,8 +32,11 @@ function! ChuckStartServer()
 
 endfunction
 
+
 function! ChuckAdd()
-    call system("chuck + ". bufname("%"))
+    let path = GetPath()
+    let path = path ."/" . bufname("%")
+    silent call system("chuck + ". path)
 endfunction
 
 function! ChuckRemove()
@@ -47,12 +50,37 @@ function! ChuckReplace()
     call inputsave()
     let in = input("Which Shred?")
     call inputrestore()
-    call system("chuck = " . in . " " . bufname("%"))
+    let path = GetPath() . "/" . bufname("%")
+    silent call system("chuck = " . in . " " . path)
 endfunction
 
 function! ChuckKill()
     call system("chuck --kill")
 endfunction
+
+" Get the current buffer path 
+" This can be used for giving the vm 'context'
+function! GetPath()
+    if has("win32unix") || has("win64unix") " Cygwin
+        let s:h = getcwd()
+        let s:p = system( "cygpath -m " . s:h ) " remove nulls
+        let s:p = substitute(s:p, "\n", "", "" )
+    elseif has("win32") || has("win64") || has("win16") " reg'lar win
+        let s:h = getcwd()
+        let s:p = substitute(s:h, "\n", "", "") " remove nulls
+    elseif has("unix")
+        let s:uname = system("uname")
+        if s:uname == "Darwin"
+            let s:h = getcwd()
+            let s:p = substitute(s:h, "\n", "", "")
+        else
+            let s:h = getcwd()
+            let s:p = substitute(s:h, "\n", "","")
+        endif
+    endif
+    return s:p 
+endfunction
+
 
 nnoremap <buffer> <localleader>r :call ChuckRunBuffer()<cr>
 nnoremap <buffer> <localleader>c :call ChuckStartServer()<cr>
