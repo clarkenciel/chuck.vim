@@ -41,11 +41,12 @@ function GetChuckIndent(lnum)
     " If start of the line is in a string don't change indent.
     
 
-    " SEarch backward for the previous non-empty line.
+    " Search backward for the previous non-empty line.
     let plnum = prevnonblank(v:lnum - 1)
 
     if plnum == 0
         return 0
     endif
 
+endfunction
 
